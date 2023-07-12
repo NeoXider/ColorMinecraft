@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using TMPro;
 
 public class Menu : MonoBehaviour 
 {
@@ -8,52 +9,61 @@ public class Menu : MonoBehaviour
 	public GameObject playPage;
 	public GameObject optionsPage;
 
-	public Text highscoreText;
+    //public Text highscoreText;
+    public TextMeshProUGUI highscoreText;
 
-	void Start ()
+    void Start ()
 	{
-		highscoreText.text = "Highscore: " + PlayerPrefs.GetInt("Highscore").ToString();
-		SetPage("Menu");
+		highscoreText.text = PlayerPrefs.GetInt("Highscore").ToString();
+
+        SetPage("Menu");
 	}
 
 	public void SetPage (string page)
 	{
 		switch(page){
 			case "Menu":{
-				mainMenuPage.active = true;
-				playPage.active = false;
-				optionsPage.active = false;
-				break;
+                mainMenuPage.SetActive(true);
+                playPage.SetActive(false);
+                optionsPage.SetActive(false);
+                    AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
+                    break;
 			}
 			case "Play":{
-				mainMenuPage.active = false;
-				playPage.active = true;
-				optionsPage.active = false;
-				break;
+				mainMenuPage.SetActive(false);
+                playPage.SetActive(true);
+				optionsPage.SetActive(false);
+                    AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
+                    break;
 			}
 			case "Options":{
-				mainMenuPage.active = false;
-				playPage.active = false;
-				optionsPage.active = true;
-				break;
+				mainMenuPage.SetActive(false);
+                playPage.SetActive(false);
+                optionsPage.SetActive(true);
+                    AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
+                    break;
 			}
 		}
 	}
 
 	public void PlayGame (int gameMode)
 	{
-		PlayerPrefs.SetInt("GameMode", gameMode);
+        AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.gameMusic);
+        PlayerPrefs.SetInt("GameMode", gameMode);
 		Application.LoadLevel("Game");
 	}
 
 	public void ResetHighscore ()
 	{
-		PlayerPrefs.SetInt("Highscore", 0);
-		highscoreText.text = "Highscore: 0";
+        AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
+        PlayerPrefs.SetInt("Highscore", 0);
+		highscoreText.text = "0";
 	}
 
 	public void QuitGame ()
 	{
-		Application.Quit();
+        AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
+        Application.Quit();
 	}
 }

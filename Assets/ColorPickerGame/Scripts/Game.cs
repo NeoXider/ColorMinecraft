@@ -153,7 +153,9 @@ public class Game : MonoBehaviour
     }	
 
 	public void LoadMenu ()																	//This function loads the menu. Its used when the player fails the game or when the menu button gets pressed.
-	{	
+	{
+        AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.menuMusic);
 		Application.LoadLevel("Menu");			
 	}
 
