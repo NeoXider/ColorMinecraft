@@ -73,8 +73,13 @@ public class Game : MonoBehaviour
 	{
         difficultyModifier /= difficulty; 														//Start of a new round so the difficulty modifier gets divided by 1.08.
         round++;																			//Start of a new round so the round counter goes up one.
-		timer = 0.0f;                                                                       //For the Time Rush gamemode. The timer gets reset to 0 after every round.
-		modif /= difficulty;
+		if(timer >= 1)
+        timer -= 1.0f;                                                                       //For the Time Rush gamemode. The timer gets reset to 0 after every round.
+		else 
+        {
+            timer = 0.0f;
+        }
+        modif /= difficulty;
         //curColor = colorPalette[Random.Range(0, _number - 1)];					//With Random.Range selecting a random index number, we get a random color from the palette array and is set to the cur color.
         //curColor
 
