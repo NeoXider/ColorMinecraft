@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using YG;
 
 public class AudioManager : MonoBehaviour
 {
@@ -99,5 +100,20 @@ public class AudioManager : MonoBehaviour
     public bool IsEfxMute()
     {
         return muteEfx;
+    }
+    private void Update()
+    {
+        
+    }
+    private void OnApplicationFocus(bool focus)
+    {
+        if(focus)
+        {
+            musicSource.enabled = true;
+        }
+        else
+        {
+            musicSource.enabled = false;
+        }
     }
 }
