@@ -41,7 +41,24 @@ namespace Assets.SimpleLocalization
 		/// <summary>
 		/// Change localization at runtime
 		/// </summary>
-		public void SetLocalization(string localization)
+		int sw = 0;
+		public void SwitchLocalization()
+		{
+			if (sw == 0)
+			{
+				sw = 1;
+                LocalizationManager.Language = "Russian";
+				return;
+            }
+			else
+			{
+				sw = 0;
+                LocalizationManager.Language = "English";
+                return;
+            }
+        }
+
+        public void SetLocalization(string localization)
 		{
 			LocalizationManager.Language = localization;
 		}

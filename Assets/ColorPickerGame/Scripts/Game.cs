@@ -40,7 +40,7 @@ public class Game : MonoBehaviour
         _colorSquares = new GameObject[_number];
         Generation();
         NewRound();
-
+        //YG.YandexGame.FullscreenShow();
     }
     private void OnValidate()
     {
