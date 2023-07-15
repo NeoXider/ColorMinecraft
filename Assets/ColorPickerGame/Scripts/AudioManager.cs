@@ -107,12 +107,14 @@ public class AudioManager : MonoBehaviour
     }
     private void OnApplicationFocus(bool focus)
     {
-        if(focus)
+        if (focus)
         {
+            Time.timeScale = 1;
             musicSource.enabled = true;
         }
         else
         {
+            Time.timeScale = 0;
             musicSource.enabled = false;
         }
     }
