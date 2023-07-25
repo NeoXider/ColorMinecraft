@@ -26,6 +26,7 @@ public class AudioManager : MonoBehaviour
 
     void Awake()
     {
+        YG.YandexGame.FullscreenShow();
         if (Instance == null)
             Instance = this;
         else if (Instance != this)
@@ -37,6 +38,7 @@ public class AudioManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+
         muteMusic = PlayerPrefs.GetInt("MuteMusic") == 1 ? true : false;
         muteEfx = PlayerPrefs.GetInt("MuteEfx") == 1 ? true : false;
 
@@ -105,17 +107,5 @@ public class AudioManager : MonoBehaviour
     {
         
     }
-    private void OnApplicationFocus(bool focus)
-    {
-        if (focus)
-        {
-            Time.timeScale = 1;
-            musicSource.enabled = true;
-        }
-        else
-        {
-            Time.timeScale = 0;
-            musicSource.enabled = false;
-        }
-    }
+    
 }

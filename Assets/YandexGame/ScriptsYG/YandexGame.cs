@@ -14,6 +14,8 @@ namespace YG
 {
     public class YandexGame : MonoBehaviour
     {
+        private AudioManager AM = AudioManager.Instance;
+
         public InfoYG infoYG;
         [Tooltip("Объект YandexGame не будет удаляться при смене сцены. При выборе опции singleton, объект YandexGame необходимо поместить только на одну сцену, которая первая загружается при запуске игры.\n\n •  При выборе опции singleton, полноэкранная реклама не будет автоматически показываться при загрузке новой сцены, даже при выборе параметра Ad When Loading Scene = true в InfoYG.")]
         public bool singleton;
@@ -848,6 +850,7 @@ namespace YG
         public void OpenFullAd()
         {
             OpenFullscreenAd.Invoke();
+            PauseGame(true);
             OpenFullAdEvent?.Invoke();
             nowFullAd = true;
         }
@@ -857,6 +860,7 @@ namespace YG
         {
             nowFullAd = false;
             CloseFullscreenAd.Invoke();
+            PauseGame(false);
             CloseFullAdEvent?.Invoke();
 #if !UNITY_EDITOR
             if (wasShown == "true")
@@ -895,6 +899,7 @@ namespace YG
         {
             OpenVideoEvent?.Invoke();
             OpenVideoAd.Invoke();
+            PauseGame(true);
             nowVideoAd = true;
         }
 
@@ -904,6 +909,7 @@ namespace YG
             nowVideoAd = false;
 
             CloseVideoAd.Invoke();
+            PauseGame(false);
             CloseVideoEvent?.Invoke();
         }
 
@@ -1487,8 +1493,28 @@ namespace YG
             public int[] purchased;
         }
         #endregion Json
-    }
+        private void OnApplicationFocus(bool focus)
+        {
+            PauseGame(!focus);
+        }
+        public void PauseGame(bool pause)
+        {
+            if (pause)
+            {
+                Time.timeScale = 0;
+                AM.musicSource.Pause();
+                AM.efxSource.Pause();
+            }
+            else
+            {
+                Time.timeScale = 1;
+                AM.musicSource.UnPause();
+                AM.efxSource.UnPause();
+            }
+        }
 
+        
+    }
     public class Purchase
     {
         public int numArray;
