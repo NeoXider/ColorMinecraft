@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
 using TMPro;
 
 public class Menu : MonoBehaviour 
@@ -9,7 +7,6 @@ public class Menu : MonoBehaviour
 	public GameObject playPage;
 	public GameObject optionsPage;
 
-    //public Text highscoreText;
     public TextMeshProUGUI highscoreText;
 
     void Start ()

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using YG;
 
 public class AudioManager : MonoBehaviour
 {
@@ -14,7 +11,7 @@ public class AudioManager : MonoBehaviour
     [Header("Background Music")]
     public AudioClip menuMusic;
     public AudioClip gameMusic;
-    public AudioClip[] gameMusic1;
+    public AudioClip[] gameMusicMore;
 
     [Header("Sound Effects")]
     public AudioClip buttonClick;

@@ -30,13 +30,15 @@ public class Game : MonoBehaviour
     [SerializeField] private int _number;
     [SerializeField] private Sprite[] _sprite;
     [SerializeField] private float _scaleColorSquares = 1;
-	private GameObject[] _colorSquares;
+    private float modif = 7;
+    private GameObject[] _colorSquares;
 	public static Game instance;
 
 	private Sprite randTexture;
 
     public Game game;
     private int id = 0;
+
     private void Start()
     {
         _colorSquares = new GameObject[_number];
@@ -45,10 +47,7 @@ public class Game : MonoBehaviour
         NewRound();
         //YG.YandexGame.FullscreenShow();
     }
-    private void OnValidate()
-    {
-		
-    }
+
     void Awake ()
 	{
 		if (instance == null)
@@ -71,7 +70,7 @@ public class Game : MonoBehaviour
 			}
 		}
 	}
-    float modif = 7;
+    
     void NewRound ()
 	{
         difficultyModifier /= difficulty; 														

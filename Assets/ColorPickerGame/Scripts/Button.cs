@@ -24,36 +24,4 @@ public class Button : MonoBehaviour
         ButtonClick();
         _audioManager.PlayMusic(_audioManager.menuMusic);
     }
-    //void Update()
-    //{
-    //    if (Input.GetMouseButtonDown(0) && gameState == GameState.MENU && !clicked)
-    //    {
-    //        if (IsButton())
-    //            return;
-
-    //        AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
-    //        AudioManager.Instance.PlayMusic(AudioManager.Instance.gameMusic);
-    //    }
-    //    else if (Input.GetMouseButtonUp(0) && clicked && gameState == GameState.MENU)
-    //        clicked = false;
-    //}
-    //public bool IsButton()
-    //{
-    //    bool temp = false;
-
-    //    PointerEventData eventData = new PointerEventData(EventSystem.current)
-    //    {
-    //        position = Input.mousePosition
-    //    };
-
-    //    List<RaycastResult> results = new List<RaycastResult>();
-    //    EventSystem.current.RaycastAll(eventData, results);
-
-    //    foreach (RaycastResult item in results)
-    //    {
-    //        temp |= item.gameObject.GetComponent<Button>() != null;
-    //    }
-
-    //    return temp;
-    //}
 }
