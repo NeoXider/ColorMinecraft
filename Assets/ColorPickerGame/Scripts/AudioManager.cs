@@ -23,7 +23,7 @@ public class AudioManager : MonoBehaviour
 
     void Awake()
     {
-        YG.YandexGame.FullscreenShow();
+        //YG.YandexGame.FullscreenShow();
         if (Instance == null)
             Instance = this;
         else if (Instance != this)

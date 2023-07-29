@@ -48,7 +48,7 @@ public class Menu : MonoBehaviour
         AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
         AudioManager.Instance.PlayMusic(AudioManager.Instance.gameMusic);
         PlayerPrefs.SetInt("GameMode", gameMode);
-		Application.LoadLevel("Game");
+		Application.LoadLevel(1);
 	}
 
 	public void ResetHighscore ()

@@ -144,7 +144,7 @@ public class Game : MonoBehaviour
         AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
         AudioManager.Instance.PlayMusic(AudioManager.Instance.menuMusic);
         FullscreenShowYG();
-        Application.LoadLevel("Menu");
+        Application.LoadLevel(0);
         
 
     }
