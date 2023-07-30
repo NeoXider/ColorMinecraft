@@ -38,9 +38,10 @@ public class Game : MonoBehaviour
 
     public Game game;
     private int id = 0;
-
+    public AudioManager AM = AudioManager.Instance;
     private void Start()
     {
+        AM = AudioManager.Instance;
         _colorSquares = new GameObject[_number];
         FullscreenShowYG();
         Generation();
@@ -132,9 +133,11 @@ public class Game : MonoBehaviour
 		{
 			NewRound();
 			score += 10;
-		}
+            AM.PlayEffects(AM.trueCulor);
+        }
         else
-        {                                                                             
+        {
+            AM.PlayEffects(AM.gameOver);
             FailGame();                                                                   
         }
     }	

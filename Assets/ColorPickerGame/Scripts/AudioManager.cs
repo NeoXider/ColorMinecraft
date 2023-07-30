@@ -15,7 +15,7 @@ public class AudioManager : MonoBehaviour
 
     [Header("Sound Effects")]
     public AudioClip buttonClick;
-    public AudioClip hit;
+    public AudioClip trueCulor;
     public AudioClip gameOver;
 
     private bool muteMusic;
