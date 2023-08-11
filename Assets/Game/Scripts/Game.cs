@@ -6,8 +6,8 @@ using System;
 using Random = UnityEngine.Random;
 using UnityEngine.UIElements;
 using UnityEngine.U2D;
+using Assets.SimpleLocalization;
 using YG;
-
 public class Game : MonoBehaviour 
 {
 	public Color[] colorPalette;        
@@ -46,9 +46,23 @@ public class Game : MonoBehaviour
         FullscreenShowYG();
         Generation();
         NewRound();
-        //YG.YandexGame.FullscreenShow();
     }
 
+    private void OnEnable()
+    {
+        YandexGame.GetDataEvent += GetDate;
+        
+    }
+    private void OnDisable()
+    {
+        YandexGame.GetDataEvent -= GetDate;
+    }
+    public void GetDate()
+    {
+        LocalizationManager.Read();
+        LocalizationManager.Language = YandexGame.savesData.language;
+        //YandexGame.SaveProgress();
+    }
     void Awake ()
 	{
 		if (instance == null)
@@ -58,7 +72,10 @@ public class Game : MonoBehaviour
 		score = 0;																			
 
 		gameMode = (GameMode)PlayerPrefs.GetInt("GameMode");								
-																				
+		if(YandexGame.SDKEnabled == true)
+        {
+            GetDate();
+        }
 	}
 
 	void Update ()
