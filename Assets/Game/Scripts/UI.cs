@@ -4,26 +4,26 @@ using UnityEngine.UI;
 
 public class UI : MonoBehaviour 
 {
-	public Game game;	//The game script so that we can access its variables.
+	public Game _game;
 
-	public Text score;	//The text object that displays the players score.
-	public Text timer; 	//The text object that displays the time lefts for the round if the gamemode is Time Rush.
+	public Text _score;	
+	public Text _timer; 	
 
 	void Start ()
 	{
-		if(game.gameMode == GameMode.TIME_RUSH){											//If the gamemode is Time Rush, the timer gets enabled, else it is disabled.
-			timer.gameObject.active = true;
-		}else{
-			timer.gameObject.active = false;
-		}
+		if(_game._gameMode == GameMode.TIME_RUSH)									
+			_timer.gameObject.SetActive(true);
+		else
+            _timer.gameObject.SetActive(false);
+        
 	}
 
 	void Update ()
 	{
-		score.text = game.score.ToString();													//Setting the text of the score to be the score variable located in Game.cs and converting it to a string.
+		_score.text = _game._score.ToString();													
 
-		if(game.gameMode == GameMode.TIME_RUSH){											//If the gamemode is Time Rush, the timer text gets set.
-			timer.text = (game.eliminationTime - (int)game.timer).ToString();
+		if(_game._gameMode == GameMode.TIME_RUSH){											
+			_timer.text = (_game._eliminationTime - (int)_game._timer).ToString();
 		}
 	}
 

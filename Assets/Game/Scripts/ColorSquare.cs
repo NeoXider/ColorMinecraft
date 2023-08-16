@@ -22,7 +22,7 @@ public class ColorSquare : MonoBehaviour
     {
         particle.Pause();
         AM = AudioManager.Instance;
-        game = Game.instance.game;
+        game = Game._instance;
     }
     public void Nice()
     {

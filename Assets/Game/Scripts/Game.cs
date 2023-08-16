@@ -1,51 +1,69 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
-//using static UnityEditor.Progress;
-using System;
 using Random = UnityEngine.Random;
-using UnityEngine.UIElements;
-using UnityEngine.U2D;
 using Assets.SimpleLocalization;
 using YG;
 public class Game : MonoBehaviour 
 {
-	public Color[] colorPalette;        
-    [SerializeField] private Color curColor;              
-    [SerializeField] private Color curOddColor;          
-    [SerializeField] private GameObject colorSquares;
-	public int oddColorSquare;       
+    [Header("Score")]
+    public int _score;
+   
 
-	public float difficulty = 1.04f;
-	public float difficultyModifier;	
-	public int round;					
-	public int score;				
+    [Header("Game")]
+    public static Game _instance;
+    public Color[] _colorPalette;        
+    [SerializeField] private Color _curColor;              
+    [SerializeField] private Color _curOddColor;          
+    [SerializeField] private ColorSquare _colorSquare;
+	public int _oddColorSquare;
 
-	public GameMode gameMode;	
+    [SerializeField] private float _difficulty = 1.04f;
+    [SerializeField] private float _difficultyModifier = 10;
+    public int _round;
 
-	public float timer;					
-	public float eliminationTime;       
+    public float _timer { get; private set; }
+    public float _eliminationTime;
 
+    public GameMode _gameMode;
+    
     [SerializeField] private GameObject root;
-    [SerializeField] private int _number;
+    [SerializeField] private int _countScuares = 25;
     [SerializeField] private Sprite[] _sprite;
     [SerializeField] private float _scaleColorSquares = 1;
-    private float modif = 7;
     private GameObject[] _colorSquares;
-	public static Game instance;
+	
+	private Sprite _randTexture;
 
-	private Sprite randTexture;
+    [SerializeField] private int _idRandomSprite = 0;
+    public AudioManager _am = AudioManager.Instance;
+    [Header("LeaderBoard")]
+    [SerializeField] private string _nameLeaderBoard;
+    [SerializeField] private string _nameLeaderBoardTimeRush;
 
-    public Game game;
-    private int id = 0;
-    public AudioManager AM = AudioManager.Instance;
     private void Start()
     {
-        AM = AudioManager.Instance;
-        _colorSquares = new GameObject[_number];
+        SPlayerPrefsSave();
+
+        _am = AudioManager.Instance;
+        _colorSquares = new GameObject[_countScuares];
         FullscreenShowYG();
         Generation();
         NewRound();
+    }
+
+    private void SPlayerPrefsSave()
+    {
+        if (PlayerPrefs.HasKey("Highscore"))
+            _score = PlayerPrefs.GetInt("Highscore");
+        else
+            PlayerPrefs.SetInt("Highscore", 0);
+
+        if (PlayerPrefs.HasKey("HighscoreTime"))
+            Debug.Log("");
+        else
+            PlayerPrefs.SetInt("HighscoreTime", 0);
+
+        PlayerPrefs.Save();
     }
 
     private void OnEnable()
@@ -65,13 +83,13 @@ public class Game : MonoBehaviour
     }
     void Awake ()
 	{
-		if (instance == null)
-            instance = this;
+		if (_instance == null)
+            _instance = this;
         
-		round = 0;																			
-		score = 0;																			
+		_round = 0;																			
+		_score = 0;																			
 
-		gameMode = (GameMode)PlayerPrefs.GetInt("GameMode");								
+		_gameMode = (GameMode)PlayerPrefs.GetInt("GameMode");								
 		if(YandexGame.SDKEnabled == true)
         {
             GetDate();
@@ -80,106 +98,141 @@ public class Game : MonoBehaviour
 
 	void Update ()
 	{
-		if(gameMode == GameMode.TIME_RUSH){													
-			timer += 1.0f * Time.deltaTime;
+		if(_gameMode == GameMode.TIME_RUSH){													
+			_timer += 1.0f * Time.deltaTime;
 
-			if(timer >= eliminationTime){													
+			if(_timer >= _eliminationTime){													
 				FailGame();
 			}
 		}
-	}
+    }
     
-    void NewRound ()
-	{
-        difficultyModifier /= difficulty; 														
-        round++;
-		if(timer >= 1)
-        timer -= 1.0f;
-		else 
+    void NewRound()
+    {
+        _round++;
+        if (_timer >= 1)
+            _timer -= 1.0f;
+        else
         {
-            timer = 0.0f;
+            _timer = 0.0f;
         }
-        modif /= difficulty;
-        float diff = ((1.0f / 255.0f) * difficultyModifier * modif);	
-		curOddColor = new Color(curColor.r - diff, curColor.g - diff, curColor.b - diff);
-		oddColorSquare = Random.Range(0, _number - 1);         
-        if (round == 1)
+        SetDifficultyCollor();
+        SetRundomTextureInRound();
+        SetOddScuaresAndSprite();
+    }
+
+    private void SetRundomTextureInRound()
+    {
+        if (_round == 1)
         {
-            
-            randTexture = GetRundomTexture();
+            _randTexture = GetRundomTexture();
         }
         else
         {
             Sprite newTexture = SetNewRandomTexture();
-            if (newTexture != randTexture)
+            if (newTexture != _randTexture)
             {
-                randTexture = newTexture;
+                _randTexture = newTexture;
             }
             else
             {
                 Debug.Log("Не удалось установить новую текстуру");
+                newTexture = SetNewRandomTexture();
+                _randTexture = newTexture;
             }
         }
-
-        for (int x = 0; x < _colorSquares.Length; x++)
-        {                                       
-            if (x == oddColorSquare)
-            {                                                       
-                _colorSquares[x].GetComponent<SpriteRenderer>().color = curOddColor;
-            }
-            else
-            {                                                                           
-                _colorSquares[x].GetComponent<SpriteRenderer>().color = curColor;
-            }
-            SetTexture(_colorSquares[x], randTexture);
-        }   
     }
 
-	void FailGame ()
+    private void SetDifficultyCollor()
+    {
+        _difficultyModifier /= _difficulty;
+        float diff = ((1.0f / 255.0f) * _difficultyModifier);
+        _curOddColor = new Color(_curColor.r - diff, _curColor.g - diff, _curColor.b - diff);
+        Debug.Log(diff);
+    }
+
+    private void SetOddScuaresAndSprite()
+    {
+        _oddColorSquare = Random.Range(0, _colorSquares.Length - 1);
+        for (int x = 0; x < _colorSquares.Length; x++)
+        {
+            if (x == _oddColorSquare)
+            {
+               // _colorSquares[x].GetComponent<SpriteRenderer>().color = Color.black;
+                _colorSquares[x].GetComponent<SpriteRenderer>().color = _curOddColor;
+            }
+            else
+            {
+                _colorSquares[x].GetComponent<SpriteRenderer>().color = _curColor;
+            }
+            SetTexture(_colorSquares[x], _randTexture);
+        }
+    }
+
+    void FailGame ()
 	{
-		if(score > PlayerPrefs.GetInt("Highscore")){										
-			PlayerPrefs.SetInt("Highscore", score);
-		}
-        if(score >= 100) FullscreenShowYG();
+        if (_gameMode == GameMode.NORMAL)
+        {
+            if (_score > PlayerPrefs.GetInt("Highscore"))
+            {
+                PlayerPrefs.SetInt("Highscore", _score);
+                YandexGame.NewLeaderboardScores(_nameLeaderBoard, _score);
+            }
+        }
+        else if (_gameMode == GameMode.TIME_RUSH)
+        {
+            if (_score > PlayerPrefs.GetInt("HighscoreTime"))
+            {
+                PlayerPrefs.SetInt("HighscoreTime", _score);
+                YandexGame.NewLeaderboardScores(_nameLeaderBoardTimeRush, _score);
+            }
+        }
+        PlayerPrefs.Save();
+        if (_score >= 350) VideoYG();
+        else if (_score >= 100) FullscreenShowYG();
+        
         LoadMenu();																			
 	}
 
 	public void CheckSquare (GameObject square)												
 	{
-		if (_colorSquares[oddColorSquare] == square)
+		if (_colorSquares[_oddColorSquare] == square)
 		{
 			NewRound();
-			score += 10;
-            AM.PlayEffects(AM.trueCulor);
+			_score += 10;
+            if (_am != null)
+                _am.PlayEffects(_am.trueCulor);
         }
         else
         {
-            AM.PlayEffects(AM.gameOver);
+            if(_am != null)
+                _am.PlayEffects(_am.gameOver);
             FailGame();                                                                   
         }
     }	
 
 	public void LoadMenu ()																	
 	{
-        AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
-        AudioManager.Instance.PlayMusic(AudioManager.Instance.menuMusic);
+        if(_am != null)
+        {
+            _am.PlayEffects(_am.buttonClick);
+            _am.PlayMusic(_am.menuMusic);
+        }  
         FullscreenShowYG();
         Application.LoadLevel(0);
-        
-
     }
 
 	public void Generation()
 	{
-        for (int i = 0; i < _number; i++)
+        for (int i = 0; i < _countScuares; i++)
         {
-			GameObject squares = Instantiate(colorSquares);
+			GameObject squares = Instantiate(_colorSquare.gameObject);
 			SetParent(squares, root);
 			squares.transform.localScale = new Vector3(_scaleColorSquares, _scaleColorSquares);
             squares.GetComponent<ColorSquare>()._index = i;
             _colorSquares[i] = squares;
             squares.name = "ColorSquareMine" + i.ToString();
-			SetTexture(squares, randTexture);
+			SetTexture(squares, _randTexture);
         }
     }
     public void SetParent(GameObject parent, GameObject newParent)
@@ -194,18 +247,18 @@ public class Game : MonoBehaviour
         for(int i = 0; i < _sprite.Length; i++)
         {
             int a = Random.Range(0, _sprite.Length);
-            if (a != id)
+            if (a != _idRandomSprite)
             {
-                id = a;
+                _idRandomSprite = a;
                 break;
             }
         }
-        return result = _sprite[id];
+        return result = _sprite[_idRandomSprite];
     }
     Sprite GetRundomTexture()
 	{
-        id = Random.Range(0, _sprite.Length);
-        Sprite result = _sprite[id];
+        _idRandomSprite = Random.Range(0, _sprite.Length);
+        Sprite result = _sprite[_idRandomSprite];
         return result;
 	}
     private void SetTexture(GameObject gameObject, Sprite sprite)

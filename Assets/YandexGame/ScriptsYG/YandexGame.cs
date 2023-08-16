@@ -1501,18 +1501,23 @@ namespace YG
         }
         public void PauseGame(bool pause)
         {
-            if (pause)
+            if (AM != null)
             {
-                Time.timeScale = 0;
-                AM.musicSource.Pause();
-                AM.efxSource.Pause();
+
+                if (pause)
+                {
+                    Time.timeScale = 0;
+                    AM.musicSource.Pause();
+                    AM.efxSource.Pause();
+                }
+                else
+                {
+                    Time.timeScale = 1;
+                    AM.musicSource.UnPause();
+                    AM.efxSource.UnPause();
+                }
             }
-            else
-            {
-                Time.timeScale = 1;
-                AM.musicSource.UnPause();
-                AM.efxSource.UnPause();
-            }
+
         }
 
         
