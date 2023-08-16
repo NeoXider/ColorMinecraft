@@ -8,10 +8,12 @@ public class Menu : MonoBehaviour
 	public GameObject optionsPage;
 
     public TextMeshProUGUI highscoreText;
+    public TextMeshProUGUI highscoreTimeText;
 
     void Start ()
 	{
-		highscoreText.text = PlayerPrefs.GetInt("Highscore").ToString();
+        highscoreText.text = PlayerPrefs.GetInt("Highscore").ToString();
+        highscoreTimeText.text = PlayerPrefs.GetInt("HighscoreTime").ToString();
 
         SetPage("Menu");
 	}
@@ -55,8 +57,10 @@ public class Menu : MonoBehaviour
 	{
         AudioManager.Instance.PlayEffects(AudioManager.Instance.buttonClick);
         PlayerPrefs.SetInt("Highscore", 0);
-		highscoreText.text = "0";
-	}
+        PlayerPrefs.SetInt("HighscoreTime", 0);
+        highscoreText.text = "0";
+        highscoreTimeText.text = "0";
+    }
 
 	public void QuitGame ()
 	{

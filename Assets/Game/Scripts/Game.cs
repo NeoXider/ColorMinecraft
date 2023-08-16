@@ -42,7 +42,7 @@ public class Game : MonoBehaviour
 
     private void Start()
     {
-        SPlayerPrefsSave();
+        PlayerPrefsSave();
 
         _am = AudioManager.Instance;
         _colorSquares = new GameObject[_countScuares];
@@ -51,15 +51,15 @@ public class Game : MonoBehaviour
         NewRound();
     }
 
-    private void SPlayerPrefsSave()
+    private void PlayerPrefsSave()
     {
         if (PlayerPrefs.HasKey("Highscore"))
-            _score = PlayerPrefs.GetInt("Highscore");
+            Debug.Log("загрузка Highscore");
         else
             PlayerPrefs.SetInt("Highscore", 0);
 
         if (PlayerPrefs.HasKey("HighscoreTime"))
-            Debug.Log("");
+            Debug.Log("загрузка HighscoreTime");
         else
             PlayerPrefs.SetInt("HighscoreTime", 0);
 
@@ -148,7 +148,6 @@ public class Game : MonoBehaviour
         _difficultyModifier /= _difficulty;
         float diff = ((1.0f / 255.0f) * _difficultyModifier);
         _curOddColor = new Color(_curColor.r - diff, _curColor.g - diff, _curColor.b - diff);
-        Debug.Log(diff);
     }
 
     private void SetOddScuaresAndSprite()
@@ -169,37 +168,21 @@ public class Game : MonoBehaviour
         }
     }
 
-    void FailGame ()
+    void FailGame()
 	{
-        if (_gameMode == GameMode.NORMAL)
-        {
-            if (_score > PlayerPrefs.GetInt("Highscore"))
-            {
-                PlayerPrefs.SetInt("Highscore", _score);
-                YandexGame.NewLeaderboardScores(_nameLeaderBoard, _score);
-            }
-        }
-        else if (_gameMode == GameMode.TIME_RUSH)
-        {
-            if (_score > PlayerPrefs.GetInt("HighscoreTime"))
-            {
-                PlayerPrefs.SetInt("HighscoreTime", _score);
-                YandexGame.NewLeaderboardScores(_nameLeaderBoardTimeRush, _score);
-            }
-        }
-        PlayerPrefs.Save();
-        if (_score >= 350) VideoYG();
-        else if (_score >= 100) FullscreenShowYG();
         
+        if (_score >= 350) VideoYG();
+        else if (_score >= 100) FullscreenShowYG(); 
         LoadMenu();																			
 	}
 
 	public void CheckSquare (GameObject square)												
 	{
 		if (_colorSquares[_oddColorSquare] == square)
-		{
-			NewRound();
-			_score += 10;
+        {
+            NewRound();
+            _score += 10;
+            SaveHighScore();
             if (_am != null)
                 _am.PlayEffects(_am.trueCulor);
         }
@@ -209,9 +192,32 @@ public class Game : MonoBehaviour
                 _am.PlayEffects(_am.gameOver);
             FailGame();                                                                   
         }
-    }	
+    }
 
-	public void LoadMenu ()																	
+    private void SaveHighScore()
+    {
+        if (_gameMode == GameMode.NORMAL)
+        {
+            if (_score > PlayerPrefs.GetInt("Highscore"))
+            {
+                Debug.Log("Save Highscore");
+                PlayerPrefs.SetInt("Highscore", _score);
+                YandexGame.NewLeaderboardScores(_nameLeaderBoard, _score);
+            }
+        }
+        else if (_gameMode == GameMode.TIME_RUSH)
+        {
+            if (_score > PlayerPrefs.GetInt("HighscoreTime"))
+            {
+                Debug.Log("Save HighscoreTime");
+                PlayerPrefs.SetInt("HighscoreTime", _score);
+                YandexGame.NewLeaderboardScores(_nameLeaderBoardTimeRush, _score);
+            }
+        }
+        PlayerPrefs.Save();
+    }
+
+    public void LoadMenu ()																	
 	{
         if(_am != null)
         {
