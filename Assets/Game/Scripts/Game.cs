@@ -3,6 +3,7 @@ using System.Collections;
 using Random = UnityEngine.Random;
 using Assets.SimpleLocalization;
 using YG;
+
 public class Game : MonoBehaviour 
 {
     [Header("Score")]
@@ -170,9 +171,15 @@ public class Game : MonoBehaviour
 
     void FailGame()
 	{
-        
+
         if (_score >= 350) VideoYG();
-        else if (_score >= 100) FullscreenShowYG(); 
+        else if (_score >= 100)
+        { 
+             FullscreenShowYG();
+            YandexGame.ReviewShow(false);
+        }
+        
+        
         LoadMenu();																			
 	}
 
@@ -214,6 +221,7 @@ public class Game : MonoBehaviour
                 YandexGame.NewLeaderboardScores(_nameLeaderBoardTimeRush, _score);
             }
         }
+        YandexGame.SaveProgress();
         PlayerPrefs.Save();
     }
 

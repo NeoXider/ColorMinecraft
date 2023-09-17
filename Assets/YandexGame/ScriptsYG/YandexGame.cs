@@ -1499,6 +1499,7 @@ namespace YG
         {
             PauseGame(!focus);
         }
+
         public void PauseGame(bool pause)
         {
             if (AM != null)
